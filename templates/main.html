@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head lang="ru">
+    <meta charset="UTF-8">
+    <title>Система учета финансов</title>
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/datepicker.css" rel="stylesheet">
+    <link href="/static/bootstrap-calendar-master/css/calendar.css">
+</head>
+<body>
+{% block menu %}
+    <nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid">
+
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="{% url 'main' %}">iFinance</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li><a href="{% url 'earnings' %}">Доходы</a></li>
+        <li><a href="{% url 'costs' %}">Расходы</a></li>
+        <li><a href="{% url 'analitycs' %}">Аналитика</a></li>
+        <li><a href="{% url 'contact' %}">Свяжитесь с нами</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+          <li class="active" ><a href="#">{{ user_username }}</a></li>
+        <li><a href="{% url 'logout' %}">Выйти</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+{% endblock %}
+
+
+{% block content %}
+	<div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6">
+                Остаток прошлого месяца: -------
+            </div>
+            <div class="col-md-6">
+                Баланс: {{ current_balance }}
+            </div>
+        </div>
+		<div class="row">
+			<div class="col-md-4">
+			<h4>Мои доходы</h4>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <td>Дата</td>
+                            <td>Категория</td>
+                            <td>Сумма</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for earn in earnings_list %}
+                            <tr>
+                                <td>{{ earn.date }}</td>
+                                {% for c in cat %}
+                                    {% if earn.category_id == c.id %}
+                                        <td>{{ c.name }}</td>
+                                    {% endif %}
+                                {% endfor %}
+                                <td>{{ earn.sum }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+
+            <div class="col-md-4">
+			    <h4>Диаграммы</h4>
+                <input type="text" class="form-control hidden" id="earn" name="earn" value="{{ earns_sum }}">
+                <input type="text" class="form-control hidden" id="cost" name="cost" value="{{ costs_sum }}">
+
+                <ul class="list-group hidden" id="cat">
+                    {% for c in cat %}
+                        <li class="list-group-item " id="{{ c.id }}">{{ c.name }}</li>
+                    {% endfor %}
+                </ul>
+                <ul class="list-group hidden" id="sum">
+                    {% for k, v in sum_cat_cost.items %}
+                        <li class="list-group-item" id="{{ k }}">{{ v }}</li>
+                    {% endfor %}
+                </ul>
+
+                <div class="thumbnail">
+                        <center>
+                            <canvas id="buyers" width="300" height="220"></canvas>
+                            <h4>Гистограмма</h4>
+                            <hr class="separator">
+                            <canvas id="countries" width="300" height="220"></canvas>
+                            <h4>Круговая диаграмма</h4>
+                            </center>
+                        </div>
+			</div>
+
+
+
+			<div class="col-md-4">
+			    <h4>Мои расходы</h4>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <td>Дата</td>
+                            <td>Категория</td>
+                            <td>Сумма</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cost in costs_list %}
+                            <tr>
+                                <td>{{ cost.date }}</td>
+                                {% for c in cat %}
+                                    {% if cost.category_id == c.id %}
+                                        <td>{{ c.name }}</td>
+                                    {% endif %}
+                                {% endfor %}
+                                <td>{{ cost.sum }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+
+
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>-->
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script src="/static/js/moment.js"></script>
+<script src="/static/js/daterangepicker.js"></script>
+<script src="/static/js/Chart.min.js"></script>
+<script src="/static/js/diagrams.js"></script>
+<script src="/static/js/mycalendar.js"></script>
+</body>
+</html>

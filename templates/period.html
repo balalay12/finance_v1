@@ -1,0 +1,71 @@
+{% extends "main.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3">
+                <ul class="nav nav-pills nav-stacked">
+                    {% if earnings_list or e %}
+                        <li><a href="{% url 'earnings' %}">Все доходы</a></li>
+                        <li><a href="{% url 'add_earn' %}">Ввод доходов</a></li>
+                    {% endif %}
+                    {% if costs_list or c %}
+                        <li><a href="{% url 'costs' %}">Все расходы</a></li>
+                        <li><a href="{% url 'add_cost' %}">Ввод  расходов</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+
+            <div class="col-md-9">
+                <h4>Период</h4>
+                <form class="form-horizontal" method="post">{% csrf_token %}
+                    {{ form|crispy }}
+                    <button type="submit" class="btn btn-default">Отправить</button>
+                </form>
+                <hr class="separator">
+
+                {% if earnings_list or costs_list %}
+                    <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <td>Дата</td>
+                            <td>Сумма</td>
+                            <td>Описание</td>
+                            <td></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% if earnings_list|length > 0 %}
+                        {% for earning in earnings_list %}
+                            <tr>
+                                <td><a href="{% url 'upd_earn' pk=earning.id %}">{{ earning.date }}</a></td>
+                                <td><a href="{{ earning.id }}">{{ earning.sum }}</a></td>
+                                <td><a href="{{ earning.id }}">{{ earning.comment }}</a></td>
+                                <td><a href="{% url 'delete' pk=earning.id %}"><button type="submit" class="btn btn-default">Удалить</button></a></td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <h3>Ничего не найдено</h3>
+                    {% endif %}
+                    {% if costs_list|length > 0 %}
+                        {% for cost in costs_list %}
+                        <tr>
+                            <td><a href="{% url 'upd_cost' pk=cost.id %}">{{ cost.date }}</a></td>
+                            <td><a href="{{ cost.id }}">{{ cost.sum }}</a></td>
+                            <td><a href="{{ cost.id }}">{{ cost.comment }}</a></td>
+                            <td><a href="{% url 'delete' pk=cost.id %}"><button type="submit" class="btn btn-default">Удалить</button></a></td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <h3>Ничего не найдено</h3>
+                    {% endif %}
+                    </tbody>
+                    </table>
+                        Сумма за период: {{ summa }}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

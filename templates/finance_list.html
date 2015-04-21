@@ -1,0 +1,38 @@
+{% extends "main.html" %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <ul class="list-group">
+                    <a class="list-group-item" href="{% url 'views.add_cost' %}">Ввести расходы</a>
+                    <a class="list-group-item" href="#">Мои расходы</a>
+                    <a class="list-group-item" href="{% url 'views.costs_period' %}">Расходы за период</a>
+                </ul>
+            </div>
+            <div class="col-md-9">
+                <h4>Расходы</h4>
+                <p>Отображаются последние 10 записей</p>
+                <table class="table table-striped well">
+                    <thead>
+                        <tr>
+                            <td>Дата</td>
+                            <td>Сумма</td>
+                            <td>Описание</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                {% for e in list %}
+                    <tr>
+                        <td><a href="{% url 'views.update_cost' id=e.id %}">{{ cost.date }}</a></td>
+                        <td><a href="{{ e.id }}">{{ e.sum }}</a></td>
+                        <td><a href="{{ e.id }}">{{ e.comment }}</a></td>
+                    </tr>
+                {% endfor %}
+                    </tbody>
+                </table>
+                Итого: {{ summa }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "main.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block menu %}
+    <nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid">
+
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="{% url 'main' %}">iFinance</a>
+    </div>
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="{% url 'reg' %}">Регистрация</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <h3>Авторизация</h3>
+        <form role="form" method="POST">
+            {{ form|crispy}}
+            {% csrf_token %}
+            <button type="submit" class="btn btn-default">Отправить</button>
+        </form>
+    </div>
+{% endblock %}

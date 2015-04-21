@@ -1,0 +1,81 @@
+{% extends "main.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <div class="container-fluid">
+        <h1>Аналитика</h1>
+        <div class="row-fluid">
+            <div class="col-md-3">
+                <ul class="list-group">
+                    <a class="list-group-item" href="#">Общее</a>
+                </ul>
+            </div>
+            <div class="col-md-9">
+                <form class="form-horizontal" method="post">{% csrf_token %}
+                    {{ form|crispy }}
+                    <button type="submit" class="btn btn-default">Отправить</button>
+                </form>
+                {% if cost and earn  %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="earn">Доходы</label>
+                            <input type="text" class="form-control alert alert-success" id="earn" name="earn" value="{{ earn }}" readonly>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="cost">Расходы</label>
+                            <input type="text" class="form-control alert alert-danger" id="cost" name="cost" value="{{ cost }}" readonly>
+                        </div>
+
+                    </div>
+                {% endif %}
+                {% if sum and cat %}
+                <div class="row-fluid">
+                    <div class="col-md-6">
+                        <h5>Категории:</h5>
+                        <ul class="list-group" id="cat">
+                        {% for c in cat %}
+
+                                <li class="list-group-item" id="{{ c.id }}" name="{{ c.id }}" >{{ c.name }}</li>
+
+                        {% endfor %}
+                            </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Суммы по категориям</h5>
+                        <ul class="list-group" id="sum">
+                        {% for k, v in sum.items %}
+
+                                <li class="list-group-item" id="{{ k }}">{{ v }}</li>
+
+                        {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="thumbnail">
+                        <center>
+                            <canvas id="buyers" width="300" height="300"></canvas>
+                            <h4>Гистограмма</h4>
+                            <p>Отображает доходы и расходы за выбранный период</p>
+                            </center>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="thumbnail">
+                        <center>
+                            <canvas id="countries" width="300" height="300"></canvas>
+                            <h4>Круговая диаграмма</h4>
+                            <p>Отображает расходы по категорям за выбранный период</p>
+                            </center>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,106 @@
+{% extends "main.html" %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3">
+                <ul class="nav nav-pills nav-stacked">
+                    {% if earnings_list or e %}
+                        <li><a href="{% url 'add_earn' %}">Ввод доходов</a></li>
+                        <li><a href="{% url 'earnings_period' %}">Доходы за период</a></li>
+                    {% endif %}
+                    {% if costs_list or c %}
+                        <li><a href="{% url 'add_cost' %}">Ввод  расходов</a></li>
+                        <li><a href="{% url 'costs_period' %}">Расходы за период</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+            <div class="col-md-9">
+                <h4>{{ title }}</h4>
+                <p>Отображаются записи за текущий месяц</p>
+                <p>Для просмотра за другой период перейдите в соответсвтующее меню</p>
+                <table class="table table-striped well">
+                    <thead>
+                        <tr>
+                            <td>Дата</td>
+                            <td>Сумма</td>
+                            <td>Категория</td>
+                            <td>Описание</td>
+                            <td></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                {% if earnings_list %}
+                    {% for earning in earnings_list %}
+                        <tr>
+                            <td><a href="{% url 'upd_earn' pk=earning.id %}">{{ earning.date }}</a></td>
+                            <td><a href="{{ earning.id }}">{{ earning.sum }}</a></td>
+                            {% for cat in category %}
+                                {% if earning.category_id == cat.id %}
+                                    <td><a href="{{ earning.id }}">{{ cat.name }}</a></td>
+                                {% endif %}
+                            {% endfor %}
+                            <td><a href="{{ earning.id }}">{{ earning.comment }}</a></td>
+                            <td><a href="{% url 'delete' pk=earning.id %}"><button type="submit" class="btn btn-default">Удалить</button></a></td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+                {% if costs_list %}
+                    {% for cost in costs_list %}
+                        <tr>
+                            <td><a href="{% url 'upd_cost' pk=cost.id %}">{{ cost.date }}</a></td>
+                            <td><a href="{{ cost.id }}">{{ cost.sum }}</a></td>
+                            {% for cat in category %}
+                                {% if cost.category_id == cat.id %}
+                                    <td><a href="{{ cost.id }}">{{ cat.name }}</a></td>
+                                {% endif %}
+                            {% endfor %}
+                            <td><a href="{{ cost.id }}">{{ cost.comment }}</a></td>
+                            <td><a href="{% url 'delete' pk=cost.id %}"><button type="submit" class="btn btn-default">Удалить</button></a></td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+                    </tbody>
+                </table>
+                Итого: {{ summa }}
+                <hr class="sepatarot"/>
+
+                <div class="pagination">
+                    {% if earnings_list.has_previous %}
+                        <a href="?page={{ earnings_list.previous_page_number }}">←</a>
+                    {% endif %}
+
+                    {% for num in earnings_list.paginator.page_range %}
+                        {% if num == earnings_list.number %}
+                            <span class="current"><b>{{ num }}</b></span>
+                        {% else %}
+                            <a href="?page={{ num }}"> {{ num }}</a>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if earnings_list.has_next %}
+                        <a href="?page={{ earnings_list.next_page_number }}">→</a>
+                    {% endif %}
+
+
+                     {% if costs_list.has_previous %}
+                        <a href="?page={{ costs_list.previous_page_number }}">←</a>
+                    {% endif %}
+
+                    {% for num in costs_list.paginator.page_range %}
+                        {% if num == costs_list.number %}
+                            <span class="current"><b>{{ num }}</b></span>
+                        {% else %}
+                            <a href="?page={{ num }}"> {{ num }}</a>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if costs_list.has_next %}
+                        <a href="?page={{ costs_list.next_page_number }}">→</a>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
